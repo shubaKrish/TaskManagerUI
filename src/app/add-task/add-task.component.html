@@ -1,0 +1,66 @@
+<html>
+  <form [formGroup]="addTaskForm">
+    <table>
+      <tr>
+        <td>
+          Task:
+        </td>
+        <td>
+          <div class="form-group">
+          <input type="text" name="task" id="task" class="form-control" formControlName="task" [ngClass]="{ 'is-invalid': submitted && addFormControls.task.errors }"/>
+          <div *ngIf="submitted && addFormControls.task.errors" class="invalid-feedback">
+            <div *ngIf="addFormControls.task.errors.required">Task Description is required</div>
+        </div>
+        </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Priority:
+        </td>
+        <td>
+          <input type="range" min="1" max="30" name="priority" id="priority" class="form-control" formControlName="priority" [ngClass]="{ 'is-invalid': submitted && addFormControls.priority.errors }"/>
+          <div *ngIf="submitted && addFormControls.priority.errors" class="invalid-feedback">
+            <div *ngIf="addFormControls.priority.errors.required">Priority field is required</div>
+        </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Parent Task:
+        </td>
+        <td>
+          <input type="text" name="parentTask" id="parentTask" class="form-control" formControlName="parentTask" />
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Start Date:
+        </td>
+        <td>
+          <input type="date" name="startDate" id="startDate" class="form-control" formControlName="startDate" [ngClass]="{ 'is-invalid': submitted && addFormControls.startDate.errors }"/>
+          <div *ngIf="submitted && addFormControls.startDate.errors" class="invalid-feedback">
+            <div *ngIf="addFormControls.startDate.errors.required">Start Date is required</div>
+        </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          End Date:
+        </td>
+        <td>
+          <input type="date" name="endDate" id="endDate" class="form-control" formControlName="endDate" />
+        </td>
+      </tr>
+      <tr>
+         
+          <td>
+            <button type="submit" (click)="onAdd()">Add Task</button>
+          </td>
+          <td>
+            <button type="submit" (click)="onReset()">Reset</button>
+          </td>
+        </tr>
+    </table>
+  </form>
+  </html>

@@ -1,0 +1,95 @@
+  
+<div class="in">
+    <table width="80%">
+      <tr></tr>
+      <tr>
+      <td width="10%">
+          Task:
+      </td>
+      <td>
+        <div><input type="text" [(ngModel)]="searchTaskDesc" id="searchTaskDesc" placeholder="Search by task description"></div>
+      </td>
+      <td width="10%">
+        Parent Task:
+      </td>
+      <td>
+        <div><input type="text" [(ngModel)]="searchParentDesc" id="searchParentDesc" placeholder="Search by parent task description"></div>
+      </td>     
+    </tr>
+    <tr>
+        <td width="10%">
+            Priority From:
+        </td>
+        <td>
+            <div><input type="text" [(ngModel)]="searchPriorityFrom" id="searchPriorityFrom" placeholder="Search by priority from"></div>
+        </td>
+        <td width="10%">
+           Priority To:
+        </td>
+         <td>
+            <div><input type="text" [(ngModel)]="searchPriorityTo" id="searchPriorityTo" placeholder="Search by priority to"></div>
+        </td>
+        <td width="10%">
+                Start Date:
+        </td>
+        <td>
+            <div><input type="Date" [(ngModel)]="searchStartDate" id="searchStartDate" placeholder="Search by start date"></div>
+        </td>
+         <td width="10%">
+               End Date:
+        </td>
+         <td>
+            <div><input type="Date" [(ngModel)]="searchEndDate" id="searchEndDate" placeholder="Search by end date"></div>
+        </td>
+
+    </tr>
+    <td>&nbsp;</td>   
+    <td>&nbsp;</td>
+    </table>
+
+</div>
+<div>
+    <hr width = "100%" align="center" noshade>
+</div>
+<div>
+<table width="100%">
+  <thead>
+    <tr>
+        <td width="20%">Task</td>
+        <td width="20%">Parent</td>
+        <td width="10%">Priority</td>
+        <td width="15%">Start</td>
+        <td width="15%">End</td>
+    </tr>
+  </thead>
+  <tbody *ngFor="let task of tasklist | filter:searchTaskDesc:searchParentDesc:searchPriorityFrom:searchPriorityTo:searchStartDate:searchEndDate;let i = index;">
+    <tr>
+      <td width="20%">
+        <textarea [disabled]="true" [(ngModel)]="task.task" name="task" id="task" (ngModelChange)="onTaskDescInputChange($event,i)" (blur)="onTaskDescBlur(i)"></textarea>
+      </td>
+      <td width="20%">
+        <textarea [disabled]="true" [(ngModel)]="task.parentTask"  name="parentTask" id="parentTask" (ngModelChange)="onParentDescInputChange($event,i)" (blur)="onParentTaskDescBlur(i)"></textarea>
+      </td>
+      <td width="10%">
+        {{task.priority}}
+      </td>
+      <td width="15%">
+          {{task.startDate | date:'MM/dd/yyyy'}}
+      </td>
+      <td width="15%">
+          {{task.endDate | date:'MM/dd/yyyy'}}
+      </td>
+      <td width="10%">
+        <button type="button" (click)="onEdit(i)">Edit</button>
+      </td>
+      <td width="10%">
+          <button type="button" (click)="onEndTask(i)">End Task</button>
+      </td>
+      <td style="visibility: hidden">
+      <textarea [(ngModel)]="task.taskId" name="taskId" id="taskId" type="text" style="visibility: hidden"></textarea>
+      <textarea [(ngModel)]="task.parentId" name="parentId" id="parentId" type="text" style="visibility: hidden"></textarea>
+    </td>
+    </tr>
+  </tbody>
+</table>
+</div>
