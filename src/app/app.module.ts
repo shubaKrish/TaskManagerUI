@@ -11,11 +11,15 @@ import { HttpClientModule } from '@angular/common/http';
 import { HttpService } from 'src/app/services/http.service';
 import { RouterModule, Routes } from '@angular/router';
 import { FilterPipe} from 'src/app/services/filter.pipe';
-
+import {UserFilterPipe} from 'src/app/services/user.filter.pipe';
+import { AddUserComponent } from './add-user/add-user.component';
+import { AddProjectManagerComponent } from './add-project-manager/add-project-manager.component';
 
 const appRoutes: Routes = [
   { path: 'add-task', component:  AddTaskComponent},
-  { path: 'view-task', component: ViewTaskComponent }
+  { path: 'add-user', component: AddUserComponent },
+  { path: 'view-task', component: ViewTaskComponent },
+  { path: 'add-project-manager', component: AddProjectManagerComponent }
 ];
 
 @NgModule({
@@ -24,7 +28,10 @@ const appRoutes: Routes = [
     AddTaskComponent,
     TaskComponent,
     ViewTaskComponent,
-    FilterPipe
+    FilterPipe,
+    AddUserComponent,
+    UserFilterPipe,
+    AddProjectManagerComponent
   ],
   imports: [
     BrowserModule,

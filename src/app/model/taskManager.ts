@@ -1,3 +1,6 @@
+import { Project } from 'src/app/model/project';
+import { User } from 'src/app/model/user';
+
 export class TaskManager{
   public taskId: number;
   public parentId: number;
@@ -6,5 +9,6 @@ export class TaskManager{
   public parentTask: String;
   public startDate:Date;
   public endDate: Date;
-
+  public projectId: number;
+  public user: User;
 }

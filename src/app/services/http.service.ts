@@ -17,4 +17,8 @@ export class HttpService {
     return this.http.get(this.base_url+url, options);
   }
 
+  delete(url, options?): Observable<any>{
+    return this.http.delete(this.base_url+url,options);
+  }
+
 }

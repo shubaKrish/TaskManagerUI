@@ -1,0 +1,94 @@
+
+<form [formGroup]="addUserForm">  
+  <div align="left">
+    <table>
+      <tr>
+        <td>
+          <strong>First Name:</strong>
+        </td>
+        <td>
+          <div class="form-group">
+          <input type="text" name="firstName" id="firstName" class="form-control" formControlName="firstName" 
+          [ngClass]="{ 'is-invalid': submitted && addUserFormControls.firstName.errors }"/>
+          <div *ngIf="submitted && addUserFormControls.firstName.errors" class="invalid-feedback">
+            <div *ngIf="addUserFormControls.firstName.errors.required">First Name is required</div>
+        </div>
+        </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <strong>Last Name:</strong>
+        </td>
+        <td>
+          <input type="text" name="lastName" id="lastName" class="form-control" formControlName="lastName" 
+          [ngClass]="{ 'is-invalid': submitted && addUserFormControls.lastName.errors }"/>
+          <div *ngIf="submitted && addUserFormControls.lastName.errors" class="invalid-feedback">
+            <div *ngIf="addUserFormControls.lastName.errors.required">Last Name is required</div>
+        </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+            <strong>Employee Id:</strong>
+        </td>
+        <td>
+            <input type="text" name="employeeId" id="employeeId" class="form-control" formControlName="employeeId" 
+            [ngClass]="{ 'is-invalid': submitted && addUserFormControls.employeeId.errors }"/>
+            <div *ngIf="submitted && addUserFormControls.employeeId.errors" class="invalid-feedback">
+              <div *ngIf="addUserFormControls.employeeId.errors.required">Employee Id is required</div>
+          </div>
+        </td>
+      </tr>      
+      <tr>
+          <td>
+            <input type="submit" (click)="onAddorUpdateUser()" [value]="isEdit?'Update':'Add'">
+          </td>
+          <td>
+            <button type="submit" (click)="onReset()">Reset</button>
+          </td>
+        </tr>
+    </table>
+    </div>
+    </form>
+
+    <div>
+        <hr width = "50%" align="left" noshade>
+    </div>
+    <div class="input-container">
+        <div><input type="text" [(ngModel)]="searchUser" id="searchUser" placeholder="Search by User"></div>
+    </div>
+    <div>
+        <hr width = "50%" align="left" noshade>
+    </div>
+    <div>
+    <table width="100%">     
+      <tbody *ngFor="let user of userlist | userFilter:searchUser ;let i = index;">
+        <tr>
+          <td width="50%">
+            <input type="text" [disabled]="true" [(ngModel)]="user.firstName" name="userFirstName" id="userFirstName" >
+            <button type="button" (click)="onEdit(i)">Edit</button>
+          </td>
+        </tr>
+        <tr>  
+          <td width="50%">
+            <input type="text" [disabled]="true" [(ngModel)]="user.lastName"  name="userLastName" id="userLastName" >
+            <button type="button" (click)="onDelete(i)">Delete</button>
+          </td>
+        </tr>
+        <tr>
+          <td width="10%">
+              <input type="text" [disabled]="true" [(ngModel)]="user.employeeId"  name="userEmployeeId" id="userEmployeeId">
+          </td>  
+        </tr> 
+        <tr style="visibility: hidden">
+            <td width="10%">
+                <input type="text" [(ngModel)]="user.userId"  name="userId" id="userId" style="visibility: hidden">
+            </td>  
+          </tr>         
+        <tr>
+            <hr width = "50%" align="left" noshade>
+        </tr>
+      </tbody>
+    </table>
+    </div>
