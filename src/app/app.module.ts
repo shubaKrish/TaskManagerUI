@@ -14,7 +14,7 @@ import { FilterPipe} from 'src/app/services/filter.pipe';
 import {UserFilterPipe} from 'src/app/services/user.filter.pipe';
 import { AddUserComponent } from './add-user/add-user.component';
 import { AddProjectManagerComponent } from './add-project-manager/add-project-manager.component';
-
+import {Data} from './providers/data';
 const appRoutes: Routes = [
   { path: 'add-task', component:  AddTaskComponent},
   { path: 'add-user', component: AddUserComponent },
@@ -44,7 +44,7 @@ const appRoutes: Routes = [
       { enableTracing: true } // <-- debugging purposes only
     )
   ],
-  providers: [HttpService],
+  providers: [HttpService,Data],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -60,7 +60,7 @@
             <input type="date" name="endDate" id="endDate" class="form-control" formControlName="endDate" />
         </td>
       </tr>
-      <tr>
+      <tr *ngIf="!isEdit">
         <td>
           User:
         </td>
@@ -72,7 +72,7 @@
       </tr>
       <tr>
           <td>
-            <button type="submit" (click)="onAdd()">Add Task</button>
+              <input type="submit" (click)="onAdd()" [value]="isEdit?'Update':'Add Task'">
           </td>
           <td>
             <button type="submit" (click)="onReset()">Reset</button>

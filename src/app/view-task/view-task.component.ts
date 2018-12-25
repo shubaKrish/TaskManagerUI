@@ -1,8 +1,10 @@
 import { Component, OnInit,ElementRef } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, FormArray } from '@angular/forms';
 import { HttpService } from 'src/app/services/http.service';
+import { Project } from 'src/app/model/project';
 import { TaskManager } from 'src/app/model/taskManager';
-
+import {Router,ActivatedRoute,NavigationExtras} from '@angular/router';
+import {Data} from '../providers/data';
 @Component({
   selector: 'app-view-task',
   templateUrl: './view-task.component.html',
@@ -10,19 +12,17 @@ import { TaskManager } from 'src/app/model/taskManager';
 })
 export class ViewTaskComponent implements OnInit {
   public taskManager: TaskManager;
-  public searchTaskDesc: string;
-  public searchParentDesc: string;
-  public searchPriorityFrom:number;
-  public searchPriorityTo:number;
-  public searchStartDate: Date;
   public tasklist:TaskManager[];
+  public projects: Project[];
+  public searchFlag: boolean = false;
+
   constructor(private fb: FormBuilder, private http: HttpService,
-  private inputElement: ElementRef) { }
+  private inputElement: ElementRef, private router: Router,private data:Data) { }
   
 
   ngOnInit() {
     this.getTaskList();
-    
+    this.getProjectList();
   }
 
   getTaskList() {
@@ -33,16 +33,28 @@ export class ViewTaskComponent implements OnInit {
 
   }
 
+  getProjectList(){
+    this.http.get("v1/retrieve/projects").subscribe
+    (data=> {this.projects = data, console.log(data)},
+      error=> console.log(error));  
+  }
+
+  onSearch(){
+    this.searchFlag = true;
+  }
+
   onTaskDescInputChange(event,i){
     this.tasklist[i].task = event;
   }
 
   onEdit(i){
-    let element = this.inputElement.nativeElement.querySelectorAll("#task");
+    this.data.storage = this.tasklist[i];
+    this.router.navigate(['add-task']);
+   /* let element = this.inputElement.nativeElement.querySelectorAll("#task");
     element[i].disabled = false;
     element[i].focus();
     let parentElement = this.inputElement.nativeElement.querySelectorAll("#parentTask");
-    parentElement[i].disabled = false;
+    parentElement[i].disabled = false;*/
   }
 
   onParentDescInputChange(event,i){

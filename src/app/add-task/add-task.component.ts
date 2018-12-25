@@ -4,6 +4,7 @@ import { HttpService } from 'src/app/services/http.service';
 import { TaskManager } from 'src/app/model/taskManager';
 import { User } from 'src/app/model/user';
 import { Project } from 'src/app/model/project';
+import {Data} from '../providers/data';
 
 @Component({
   selector: 'app-add-task',
@@ -12,14 +13,32 @@ import { Project } from 'src/app/model/project';
 })
 export class AddTaskComponent implements OnInit {
 
-  constructor(private http: HttpService) { }
+  constructor(private http: HttpService, private data: Data) { }
   public addTaskForm: FormGroup;
   public task:TaskManager;
   public users:User[];
   public projects:Project[];
   submitted = false;
+  public isEdit:boolean = false;
   ngOnInit() {
-    this.addTaskForm = new FormGroup({
+    this.getProjectList();
+    this.getUserList();
+   if(this.data!=null && this.data.storage!=null){
+     console.log("project id::"+this.data.storage["projectId"]);
+     console.log("userId::"+this.data.storage["user"]);
+     console.log("this.data.storage:::"+JSON.stringify(this.data.storage));
+    this.addTaskForm = new FormGroup({     
+      projectId: new FormControl({value:this.data.storage["projectId"],disabled:true},Validators.required),
+      task: new FormControl(this.data.storage["task"],Validators.required),
+      priority: new FormControl(this.data.storage["priority"],Validators.required),
+      parentTask: new FormControl(this.data.storage["parentTask"]),
+      startDate: new FormControl(this.data.storage["startDate"],Validators.required),
+      endDate: new FormControl(this.data.storage["endDate"]),
+      taskId: new FormControl(this.data.storage["taskId"])
+    });
+    this.isEdit = true;
+   } else {
+    this.addTaskForm = new FormGroup({     
       projectId: new FormControl('',Validators.required),
       task: new FormControl('',Validators.required),
       priority: new FormControl('',Validators.required),
@@ -27,13 +46,13 @@ export class AddTaskComponent implements OnInit {
       startDate: new FormControl('',Validators.required),
       endDate: new FormControl(),
       user: new FormControl('', Validators.required)
-    });
-    this.getUserList();
-    this.getProjectList();
+    });   
+    this.isEdit = false;
+  }
+   
     }
 
     getUserList() {
-      console.log("calling amanger list!!");
       this.http.get("v1/retrieve/users").subscribe(
         data => { this.users = data, console.log("data:::"+data)},
         err => console.error(err)
@@ -52,15 +71,20 @@ export class AddTaskComponent implements OnInit {
        // stop here if form is invalid
        if (this.addTaskForm.invalid) {
         return;
-       } else {
-       this.task = this.addTaskForm.value;
-       this.task.user = new User();
-       this.task.user.userId = this.addTaskForm.controls["user"].value;       
-       let body = JSON.stringify(this.task);
-       console.log("body::"+body);
-       this.http.post("v1/add/taskmanager",body).subscribe
-       (data=>console.log(data), err=> console.log(err));
-      }
+       } else {          
+          this.task = this.addTaskForm.value;
+          if(this.isEdit){
+            let body = JSON.stringify(this.task);
+            this.http.post("v1/update/taskmanager/"+this.data.storage["taskId"],body).subscribe
+            (data=>console.log(data), err=> console.log(err));
+          } else {
+            this.task.user = new User();
+            this.task.user.userId = this.addTaskForm.controls["user"].value;       
+            let body = JSON.stringify(this.task);
+            this.http.post("v1/add/taskmanager",body).subscribe
+            (data=>console.log(data), err=> console.log(err));
+         }
+      } 
     }
 
     onReset(){
@@ -69,6 +93,10 @@ export class AddTaskComponent implements OnInit {
       this.addTaskForm.get("parentTask").setValue("");
       this.addTaskForm.get("startDate").setValue("");
       this.addTaskForm.get("endDate").setValue("");
+      this.addTaskForm.get("projectId").setValue("");
+      if(this.addTaskForm.get("user")!=null){
+      this.addTaskForm.get("user").setValue("");
+      }
     }
 
     get addFormControls() { return this.addTaskForm.controls; }
