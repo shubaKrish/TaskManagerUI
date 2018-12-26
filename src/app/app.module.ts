@@ -12,6 +12,7 @@ import { HttpService } from 'src/app/services/http.service';
 import { RouterModule, Routes } from '@angular/router';
 import { FilterPipe} from 'src/app/services/filter.pipe';
 import {UserFilterPipe} from 'src/app/services/user.filter.pipe';
+import {ProjectFilterPipe} from 'src/app/services/project.filter.pipe';
 import { AddUserComponent } from './add-user/add-user.component';
 import { AddProjectManagerComponent } from './add-project-manager/add-project-manager.component';
 import {Data} from './providers/data';
@@ -31,6 +32,7 @@ const appRoutes: Routes = [
     FilterPipe,
     AddUserComponent,
     UserFilterPipe,
+    ProjectFilterPipe,
     AddProjectManagerComponent
   ],
   imports: [

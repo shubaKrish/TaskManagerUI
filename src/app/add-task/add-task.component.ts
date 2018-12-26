@@ -24,9 +24,6 @@ export class AddTaskComponent implements OnInit {
     this.getProjectList();
     this.getUserList();
    if(this.data!=null && this.data.storage!=null){
-     console.log("project id::"+this.data.storage["projectId"]);
-     console.log("userId::"+this.data.storage["user"]);
-     console.log("this.data.storage:::"+JSON.stringify(this.data.storage));
     this.addTaskForm = new FormGroup({     
       projectId: new FormControl({value:this.data.storage["projectId"],disabled:true},Validators.required),
       task: new FormControl(this.data.storage["task"],Validators.required),

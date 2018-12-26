@@ -1,72 +1,138 @@
 <html>
     <form [formGroup]="addProjectForm">
-      <table>
-        <tr>
-          <td>
-            Project:
-          </td>
-          <td>
-            <div class="form-group">
-            <input type="text" name="project" id="project" class="form-control" formControlName="project" [ngClass]="{ 'is-invalid': isSubmitInvalid && addProjectFormControls.project.errors }"/>
-            <div *ngIf="isSubmitInvalid && addProjectFormControls.project.errors" class="error-message">
-              <div *ngIf="addProjectFormControls.project.errors.required">Project is required</div>
-          </div>
-          </div>
-          </td>
-        </tr>
-        <tr>
-            <td>
-                <input type="checkbox" name="dates" formControlName="dates" (change)="enableDisableDates()"/> &nbsp;Set Start and End Date 
-            </td>           
-            <td>
-              <input type="date" name="startDate" id="startDate" class="form-control" formControlName="startDate" [ngClass]="{ 'is-invalid': isSubmitInvalid && addProjectFormControls.startDate.errors }"/>
-             </td>           
-              <td>
-                <input type="date" name="endDate" id="endDate" class="form-control" formControlName="endDate" />
-            </td>         
-        </tr>
-        <tr *ngIf="error.isDateError">
-          <td>&nbsp;</td>
-          <td>&nbsp;</td>
-          <td>
-              <div *ngIf="error.isDateError" class="error-message"> 
-                  {{error.errorMessage}}
+      <div class="error-message">
+        {{message}}
+      </div>
+      <div>
+            <table>
+              <tr>
+                <td>
+                  Project:
+                </td>
+                <td>
+                  <div class="form-group">
+                  <input type="text" name="project" id="project" class="form-control" formControlName="project" [ngClass]="{ 'is-invalid': isSubmitInvalid && addProjectFormControls.project.errors }"/>
+                  <div *ngIf="isSubmitInvalid && addProjectFormControls.project.errors" class="error-message">
+                    <div *ngIf="addProjectFormControls.project.errors.required">Project is required</div>
+                </div>
+                </div>
+                </td>
+              </tr>
+              <tr>
+                  <td>
+                      <input type="checkbox" name="dates" formControlName="dates" (change)="enableDisableDates()"/> &nbsp;Set Start and End Date 
+                  </td>           
+                  <td>
+                    <input type="date" name="startDate" id="startDate" class="form-control" formControlName="startDate" [ngClass]="{ 'is-invalid': isSubmitInvalid && addProjectFormControls.startDate.errors }"/>
+                  </td>           
+                    <td>
+                      <input type="date" name="endDate" id="endDate" class="form-control" formControlName="endDate" />
+                  </td>         
+              </tr>
+              <tr *ngIf="error.isDateError">
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>
+                    <div *ngIf="error.isDateError" class="error-message"> 
+                        {{error.errorMessage}}
+                    </div>
+                  </td>
+              </tr>
+              <tr>
+                <td>
+                  Priority:
+                </td>
+                <td>
+                  <input type="range" min="1" max="30" name="priority" id="priority" class="form-control" formControlName="priority" [ngClass]="{ 'is-invalid': isSubmitInvalid && addProjectFormControls.priority.errors }"/>
+                  <div *ngIf="isSubmitInvalid && addProjectFormControls.priority.errors" class="error-message">
+                    <div *ngIf="addProjectFormControls.priority.errors.required">Priority field is required</div>
+                </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Manager:
+                </td>
+                <td>
+                  <select formControlName="manager" id="manager">
+                        <option *ngFor="let user of users" [value]="user.userId">{{user.firstName}} , {{user.lastName}}</option>
+                  </select>
+                  <div *ngIf="isSubmitInvalid && addProjectFormControls.manager.errors" class="error-message">
+                      <div *ngIf="addProjectFormControls.manager.errors.required">Manager is required</div>
+                  </div>
+                </td>
+              </tr>       
+              <tr>
+                
+                  <td>
+                    <input type="submit" (click)="onAdd()" [value]="isEdit?'Update':'Add'">
+                  </td>
+                  <td>
+                    <button type="submit" (click)="onReset()">Reset</button>
+                  </td>
+                </tr>
+            </table>
+      </div>
+      </form>
+      <div>
+          <hr width = "55%" align="left" noshade>
+      </div>
+      <div class="input-container">
+        <p>
+        <span>
+          <input type="text" [(ngModel)]="searchProject" id="searchProject" placeholder="Search by Project">
+        </span> 
+        </p>
+        <p>
+        <span>
+        <table width="80%">     
+          <tbody *ngFor="let project of projects | projectFilter:searchProject ;let i = index;">
+            <tr>
+              <td width="20%">
+                <table>
+                  <tr>
+                    <td> Project: {{project.project}}</td>
+                  </tr>
+                  <tr>
+                    <td> No. of Task: {{project.totalTask}} </td>
+                    <td> &nbsp;Completed: {{project.completedTask}}</td>
+                  </tr>
+                  <tr>
+                      <td>Start Date: {{project.startDate}} </td>
+                      <td> &nbsp;End Date: {{project.endDate}}</td>
+                  </tr>
+              </table>
+              </td>
+              <td width="10%">
+                  <table>
+                      <tr>
+                        <td> Priority</td>
+                      </tr>
+                      <tr>
+                        <td> {{project.priority}} </td>
+                      </tr>
+                  </table>
+              </td>
+
+              <td width="20%">
+                  <table>
+                      <tr>
+                        <td> <button type="submit" value="Edit" (click)="onEdit(i)">Edit</button></td>
+                      </tr>
+                      <tr>
+                        <td> <button type="submit" value="Suspend">Suspend</button> </td>
+                      </tr>
+                  </table>
+              </td>
+            </tr>   
+            <tr>
+              <div>
+                <hr width = "170%" align="left" noshade>
               </div>
-            </td>
-        </tr>
-        <tr>
-          <td>
-            Priority:
-          </td>
-          <td>
-            <input type="range" min="1" max="30" name="priority" id="priority" class="form-control" formControlName="priority" [ngClass]="{ 'is-invalid': isSubmitInvalid && addProjectFormControls.priority.errors }"/>
-            <div *ngIf="isSubmitInvalid && addProjectFormControls.priority.errors" class="error-message">
-              <div *ngIf="addProjectFormControls.priority.errors.required">Priority field is required</div>
-          </div>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            Manager:
-          </td>
-          <td>
-            <select formControlName="manager" id="manager">
-                  <option *ngFor="let user of users" [value]="user.userId">{{user.firstName}} , {{user.lastName}}</option>
-            </select>
-            <div *ngIf="isSubmitInvalid && addProjectFormControls.manager.errors" class="error-message">
-                <div *ngIf="addProjectFormControls.manager.errors.required">Manager is required</div>
-            </div>
-          </td>
-        </tr>       
-        <tr>
-           
-            <td>
-              <button type="submit" (click)="onAdd()">Add Task</button>
-            </td>
-            <td>
-              <button type="submit" (click)="onReset()">Reset</button>
-            </td>
-          </tr>
-      </table>
-    </form>
+            </tr>
+          </tbody>
+        </table>
+      </span>
+      </p>
+        </div>
     </html>

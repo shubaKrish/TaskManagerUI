@@ -6,5 +6,7 @@ export class Project{
   public startDate: Date;
   public endDate: Date;
   public manager: String;
+  public completedTask:number;
+  public totalTask: number;
   public user: User;
 }
