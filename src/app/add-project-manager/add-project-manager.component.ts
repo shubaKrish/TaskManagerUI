@@ -21,6 +21,7 @@ export class AddProjectManagerComponent implements OnInit {
   public projectId: number;
   public isEdit: boolean=false;
   public message: String;
+  public index:number;
   constructor(private http: HttpService,private inputElement: ElementRef) { }
 
   ngOnInit() {  
@@ -76,23 +77,36 @@ export class AddProjectManagerComponent implements OnInit {
       if(this.isEdit){
         url = "v1/update/projects/"+this.projectId;
         this.updateProjectDetails(url,body);
-        this.onPageLoadorReset();
         this.message = "Successfully updated the project details";
       } else {
         url ="v1/add/projects";
         this.updateProjectDetails(url,body);
         this.message = "Successfully added the project details";
-      }         
+      }       
+      this.updateViewProjectDetails();
     } else{
        this.isSubmitInvalid = true;
     }
    }
+
+
 
   updateProjectDetails(url,body){
     this.http.post(url,body).subscribe(
      data => console.log(data),
      err=>this.message ="An Error occured during Add/Update!");
  }
+
+ updateViewProjectDetails(){
+    this.projects[this.index].project = this.addProjectForm.controls["project"].value;
+    this.projects[this.index].priority = this.addProjectForm.controls["priority"].value;
+    this.projects[this.index].startDate = this.addProjectForm.controls["startDate"].value;
+    this.projects[this.index].endDate = this.addProjectForm.controls["endDate"].value;
+    this.projects[this.index].projectId = this.projectId;
+    this.projects[this.index].user = new User();
+    this.projects[this.index].user.userId =  this.addProjectForm.controls["manager"].value;
+ }
+
   onReset(){
     this.onPageLoadorReset();
   }
@@ -155,6 +169,7 @@ export class AddProjectManagerComponent implements OnInit {
     } else {
       this.addProjectForm.controls['manager'].setValue('');
     }
+    this.index = i;
   }
 
 }

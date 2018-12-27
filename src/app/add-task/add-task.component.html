@@ -26,6 +26,11 @@
       </tr>
       <tr>
         <td>
+            <input type="checkbox" name="parentTaskCheck" formControlName="parentTaskCheck" (change)="enableParentTask()"/> &nbsp;Parent Task
+        </td>  
+      </tr>
+      <tr>
+        <td>
           Priority:
         </td>
         <td>
@@ -39,8 +44,13 @@
         <td>
           Parent Task:
         </td>
-        <td>
+        <td *ngIf="isParenTaskEnabled">
           <input type="text" name="parentTask" id="parentTask" class="form-control" formControlName="parentTask" />
+        </td>
+        <td *ngIf="!isParenTaskEnabled">
+        <select formControlName="parentId" id="parentId">
+          <option *ngFor="let parent of parents" [value]="parent.parentId">{{parent.parentTask}}</option>
+        </select>
         </td>
       </tr>
       <tr>
@@ -60,7 +70,7 @@
             <input type="date" name="endDate" id="endDate" class="form-control" formControlName="endDate" />
         </td>
       </tr>
-      <tr *ngIf="!isEdit">
+      <tr>
         <td>
           User:
         </td>

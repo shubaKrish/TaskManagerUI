@@ -4,6 +4,7 @@ import { HttpService } from 'src/app/services/http.service';
 import { TaskManager } from 'src/app/model/taskManager';
 import { User } from 'src/app/model/user';
 import { Project } from 'src/app/model/project';
+import { Parent } from 'src/app/model/parent';
 import {Data} from '../providers/data';
 
 @Component({
@@ -18,31 +19,46 @@ export class AddTaskComponent implements OnInit {
   public task:TaskManager;
   public users:User[];
   public projects:Project[];
+  public parents:Parent[];
+  public parent:Parent;
   submitted = false;
   public isEdit:boolean = false;
+  public isParenTaskEnabled:boolean = false;
   ngOnInit() {
     this.getProjectList();
     this.getUserList();
+    this.getParentList();
+   
    if(this.data!=null && this.data.storage!=null){
+    
+    let user = this.data.storage["user"];
+    let userId = "";
+    if(user!=null && user!=undefined){
+      userId = user.userId;
+    }
     this.addTaskForm = new FormGroup({     
       projectId: new FormControl({value:this.data.storage["projectId"],disabled:true},Validators.required),
       task: new FormControl(this.data.storage["task"],Validators.required),
+      parentTaskCheck: new FormControl({value:false,disabled:true}),
       priority: new FormControl(this.data.storage["priority"],Validators.required),
-      parentTask: new FormControl(this.data.storage["parentTask"]),
       startDate: new FormControl(this.data.storage["startDate"],Validators.required),
       endDate: new FormControl(this.data.storage["endDate"]),
-      taskId: new FormControl(this.data.storage["taskId"])
+      taskId: new FormControl(this.data.storage["taskId"]),
+      user: new FormControl(userId),
+      parentId: new FormControl(this.data.storage["parentId"])
     });
     this.isEdit = true;
    } else {
     this.addTaskForm = new FormGroup({     
       projectId: new FormControl('',Validators.required),
       task: new FormControl('',Validators.required),
+      parentTaskCheck: new FormControl(),
       priority: new FormControl('',Validators.required),
       parentTask: new FormControl(''),
       startDate: new FormControl('',Validators.required),
       endDate: new FormControl(),
-      user: new FormControl('', Validators.required)
+      user: new FormControl('', Validators.required),
+      parentId: new FormControl()
     });   
     this.isEdit = false;
   }
@@ -51,7 +67,7 @@ export class AddTaskComponent implements OnInit {
 
     getUserList() {
       this.http.get("v1/retrieve/users").subscribe(
-        data => { this.users = data, console.log("data:::"+data)},
+        data => { this.users = data},
         err => console.error(err)
       );
   
@@ -59,41 +75,94 @@ export class AddTaskComponent implements OnInit {
 
     getProjectList(){
       this.http.get("v1/retrieve/projects").subscribe
-      (data=> {this.projects = data, console.log(data)},
+      (data=> {this.projects = data},
+        error=> console.log(error));  
+    }
+
+    getParentList(){
+      this.http.get("v1/retrieve/parentTasks").subscribe
+      (data=> {this.parents = data},
         error=> console.log(error));  
     }
 
     onAdd(){
       this.submitted=true;
+      
        // stop here if form is invalid
        if (this.addTaskForm.invalid) {
+        console.log("in if block:::");
         return;
-       } else {          
-          this.task = this.addTaskForm.value;
-          if(this.isEdit){
-            let body = JSON.stringify(this.task);
-            this.http.post("v1/update/taskmanager/"+this.data.storage["taskId"],body).subscribe
-            (data=>console.log(data), err=> console.log(err));
-          } else {
-            this.task.user = new User();
-            this.task.user.userId = this.addTaskForm.controls["user"].value;       
-            let body = JSON.stringify(this.task);
-            this.http.post("v1/add/taskmanager",body).subscribe
-            (data=>console.log(data), err=> console.log(err));
-         }
+       } else {   
+         console.log("in else block:::");
+          if(this.addTaskForm.controls["parentTaskCheck"].value==true){
+            this.parent = new Parent();
+            this.parent.parentTask = this.addTaskForm.controls["parentTask"].value;
+            let body = JSON.stringify(this.parent);
+            this.http.post("v1/add/parentTask",body).subscribe
+            (data=>this.getParentList(), err=> console.log(err));            
+          } else {      
+                this.task = this.addTaskForm.value;    
+                this.task.user = new User();
+                this.task.user.userId = this.addTaskForm.controls["user"].value;     
+                if(this.isEdit){
+                  let body = JSON.stringify(this.task);
+                  console.log("body for update task::::"+body);
+                  this.http.post("v1/update/taskmanager/"+this.data.storage["taskId"],body).subscribe
+                  (data=>console.log(data), err=> console.log(err));
+                } else {                       
+                  let body = JSON.stringify(this.task);
+                  console.log("body for add task:::"+body);
+                  this.http.post("v1/add/taskmanager",body).subscribe
+                  (data=>console.log(data), err=> console.log(err));
+                }
+          }
       } 
     }
 
     onReset(){
+      this.addTaskForm.get("task").enable();
+      this.addTaskForm.get("priority").enable();
+      this.addTaskForm.get("startDate").enable();
+      this.addTaskForm.get("endDate").enable();
+      this.addTaskForm.get("user").enable();
+      this.addTaskForm.get("projectId").enable();
+      this.isParenTaskEnabled = false;
+
       this.addTaskForm.get("task").setValue("");
       this.addTaskForm.get("priority").setValue("");
-      this.addTaskForm.get("parentTask").setValue("");
       this.addTaskForm.get("startDate").setValue("");
       this.addTaskForm.get("endDate").setValue("");
       this.addTaskForm.get("projectId").setValue("");
-      if(this.addTaskForm.get("user")!=null){
-      this.addTaskForm.get("user").setValue("");
+      if(this.addTaskForm.get("parentId")!=null && this.addTaskForm.get("parentId")!=undefined){
+        this.addTaskForm.get("parentId").setValue("");
       }
+      if(this.addTaskForm.get("parentTask")!=null && this.addTaskForm.get("parentTask")!=undefined){
+        this.addTaskForm.get("parentTask").setValue("");
+      }
+      if(this.addTaskForm.get("user")!=null){
+       this.addTaskForm.get("user").setValue("");
+      }
+    }
+
+    enableParentTask(){
+      if(this.addTaskForm.controls["parentTaskCheck"].value==true){
+        this.addTaskForm.get("task").disable();
+        this.addTaskForm.get("priority").disable();
+        this.addTaskForm.get("startDate").disable();
+        this.addTaskForm.get("endDate").disable();
+        this.addTaskForm.get("user").disable();
+        this.addTaskForm.get("projectId").disable();
+        this.isParenTaskEnabled = true;
+      } else {
+        this.addTaskForm.get("task").enable();
+        this.addTaskForm.get("priority").enable();
+        this.addTaskForm.get("startDate").enable();
+        this.addTaskForm.get("endDate").enable();
+        this.addTaskForm.get("user").enable();
+        this.addTaskForm.get("projectId").enable();
+        this.isParenTaskEnabled = false;
+      }
+    
     }
 
     get addFormControls() { return this.addTaskForm.controls; }

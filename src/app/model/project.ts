@@ -5,7 +5,7 @@ export class Project{
   public priority: number;
   public startDate: Date;
   public endDate: Date;
-  public manager: String;
+ // public manager: String;
   public completedTask:number;
   public totalTask: number;
   public user: User;

@@ -27,7 +27,7 @@ export class ViewTaskComponent implements OnInit {
 
   getTaskList() {
     this.http.get("v1/retrieve/taskmanager").subscribe(
-      data => { this.tasklist = data},
+      data => { this.tasklist = data, console.log("data in view task::"+data)},
       err => console.error(err)
     );
 
@@ -43,46 +43,13 @@ export class ViewTaskComponent implements OnInit {
     this.searchFlag = true;
   }
 
-  onTaskDescInputChange(event,i){
-    this.tasklist[i].task = event;
-  }
 
   onEdit(i){
     this.data.storage = this.tasklist[i];
     this.router.navigate(['add-task']);
-   /* let element = this.inputElement.nativeElement.querySelectorAll("#task");
-    element[i].disabled = false;
-    element[i].focus();
-    let parentElement = this.inputElement.nativeElement.querySelectorAll("#parentTask");
-    parentElement[i].disabled = false;*/
   }
 
-  onParentDescInputChange(event,i){
-    this.tasklist[i].parentTask = event;
-  }
-
-  onTaskDescBlur(i){
-    let taskId = this.tasklist[i].taskId;
-    this.updateTaskManagerService(taskId,this.tasklist[i]);
-    let element = this.inputElement.nativeElement.querySelectorAll("#task");
-    element[i].disabled = true;
-    let parentElement = this.inputElement.nativeElement.querySelectorAll("#parentTask");
-    parentElement[i].focus();
- }
-
- onParentTaskDescBlur(i){
-  let taskId = this.tasklist[i].taskId;
-  this.updateTaskManagerService(taskId,this.tasklist[i]);
-  let parentElement = this.inputElement.nativeElement.querySelectorAll("#parentTask");
-  parentElement[i].disabled = true;
-}
-
- updateTaskManagerService(taskId,task){
-  let body = JSON.stringify(task);
-  let url = "v1/update/taskmanager/"+taskId;
-  this.callPOSTRestWebService(url,body);
-
-}
+ 
 
 callPOSTRestWebService(url,body){
   this.http.post(url,body).subscribe

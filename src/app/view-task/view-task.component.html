@@ -42,10 +42,10 @@
   <tbody *ngFor="let task of tasklist | filter:project:searchFlag;let i = index;">
     <tr>
       <td width="20%">
-        <textarea [disabled]="true" [(ngModel)]="task.task" name="task" id="task" (ngModelChange)="onTaskDescInputChange($event,i)" (blur)="onTaskDescBlur(i)"></textarea>
+        <textarea [disabled]="true" [(ngModel)]="task.task" name="task" id="task" ></textarea>
       </td>
       <td width="20%">
-        <textarea [disabled]="true" [(ngModel)]="task.parentTask"  name="parentTask" id="parentTask" (ngModelChange)="onParentDescInputChange($event,i)" (blur)="onParentTaskDescBlur(i)"></textarea>
+        <textarea [disabled]="true" [(ngModel)]="task.parent.parentTask"  name="parentTask" id="parentTask" ></textarea>
       </td>
       <td width="10%">
         {{task.priority}}

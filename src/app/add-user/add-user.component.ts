@@ -18,6 +18,7 @@ export class AddUserComponent implements OnInit {
   public isEdit: boolean = false;
   public searchUser: string;
   public userId: number;
+  public index: number;
   constructor(private http:HttpService, private inputElement: ElementRef) { }
   
   ngOnInit() {
@@ -30,11 +31,12 @@ export class AddUserComponent implements OnInit {
   }
 
   getUserList(){
-    console.log("inside getUserList:::");
     this.http.get("v1/retrieve/users").subscribe
     (data=> {this.userlist = data, console.log(data)},
       error=> console.log(error));  
   }
+
+  
 
   onAddorUpdateUser(){
    if(this.addUserForm.valid){
@@ -50,16 +52,20 @@ export class AddUserComponent implements OnInit {
        url ="v1/add/users";
      }
      this.updateUserDetails(url,body);
+     this.updateViewUserDetails();
    } else{
       this.submitted = true;
    }
   }
 
-   updateUserDetails(url,body){
+  updateUserDetails(url,body){
      this.http.post(url,body).subscribe(
-      data => this.getUserList(),
       err=> console.log(err));
   }
+
+  updateViewUserDetails(){
+    this.userlist[this.index] = this.addUserForm.value;
+ }
 
   onReset(){
     this.addUserForm.controls['firstName'].setValue('');
@@ -82,9 +88,10 @@ export class AddUserComponent implements OnInit {
     let employeeId = this.userlist[i].employeeId;
     this.addUserForm.controls['firstName'].setValue(firstName);
     this.addUserForm.controls['lastName'].setValue(lastName);
-    this.addUserForm.controls['employeeId'].setValue(employeeId);
+    this.addUserForm.controls['employeeId'].setValue(employeeId);    
     this.isEdit = true;
     this.userId = this.userlist[i].userId;
+    this.index = i;
   }
 
 
