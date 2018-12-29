@@ -1,15 +1,25 @@
 <html>
   <form [formGroup]="addTaskForm">
     <table>
-      <tr>
+     <tr>
+       <td>
+        <div class="error-message">
+            {{message}}
+          </div>
+        </td>  
+     </tr>
+      <tr>        
         <td>
           Project:
         </td>
         <td>
-            <select formControlName="projectId" id="projectId">
+            <select formControlName="projectId" id="projectId" [ngClass]="{ 'is-invalid': submitted && addFormControls.projectId.errors }">
                 <option *ngFor="let project of projects" [value]="project.projectId">{{project.project}}</option>
-            </select>
-        </td>
+            </select>  
+            <div *ngIf="submitted && addFormControls.projectId.errors" class="error-message">
+                <div *ngIf="addFormControls.projectId.errors.required">Project is required</div>
+            </div>         
+        </td>       
       </tr>
       <tr>
         <td>
@@ -18,7 +28,7 @@
         <td>
           <div class="form-group">
           <input type="text" name="task" id="task" class="form-control" formControlName="task" [ngClass]="{ 'is-invalid': submitted && addFormControls.task.errors }"/>
-          <div *ngIf="submitted && addFormControls.task.errors" class="invalid-feedback">
+          <div *ngIf="submitted && addFormControls.task.errors" class="error-message">
             <div *ngIf="addFormControls.task.errors.required">Task Description is required</div>
         </div>
         </div>
@@ -34,10 +44,8 @@
           Priority:
         </td>
         <td>
-          <input type="range" min="1" max="30" name="priority" id="priority" class="form-control" formControlName="priority" [ngClass]="{ 'is-invalid': submitted && addFormControls.priority.errors }"/>
-          <div *ngIf="submitted && addFormControls.priority.errors" class="invalid-feedback">
-            <div *ngIf="addFormControls.priority.errors.required">Priority field is required</div>
-        </div>
+          <input type="range" min="1" max="30" name="priority" id="priority" class="form-control" formControlName="priority"/>
+         
         </td>
       </tr>
       <tr>
@@ -59,7 +67,7 @@
         </td>
         <td>
           <input type="date" name="startDate" id="startDate" class="form-control" formControlName="startDate" [ngClass]="{ 'is-invalid': submitted && addFormControls.startDate.errors }"/>
-          <div *ngIf="submitted && addFormControls.startDate.errors" class="invalid-feedback">
+          <div *ngIf="submitted && addFormControls.startDate.errors" class="error-message">
             <div *ngIf="addFormControls.startDate.errors.required">Start Date is required</div>
         </div>
         </td>

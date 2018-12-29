@@ -1,9 +1,9 @@
   
 <div class="input-container">
-    <table width="80%">
+    <table width="60%">
       <tr></tr>
       <tr>
-      <td width="10%">
+      <td>
           Project:
       </td>
       <td>
@@ -18,6 +18,16 @@
               <button type="submit" value="Search" (click)="onSearch()">Search</button>
           </div>
       </td>
+      <td>
+          Sort By:
+      </td>
+      <td>
+          <button type="submit" value="Start Date" (click)="sortByStartDate()">Start Date</button>
+     
+          &nbsp;<button type="submit" value="End Date" (click)="sortByEndDate()">End Date</button>
+     
+          &nbsp;<button type="submit" value="Priority" (click)="sortByPriority()">Priority</button>
+      </td>      
     </tr>
     
     <td>&nbsp;</td>   

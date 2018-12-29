@@ -24,6 +24,7 @@ export class AddTaskComponent implements OnInit {
   submitted = false;
   public isEdit:boolean = false;
   public isParenTaskEnabled:boolean = false;
+  public message: String;
   ngOnInit() {
     this.getProjectList();
     this.getUserList();
@@ -35,29 +36,33 @@ export class AddTaskComponent implements OnInit {
     let userId = "";
     if(user!=null && user!=undefined){
       userId = user.userId;
+      console.log("userId:::"+userId);
     }
     this.addTaskForm = new FormGroup({     
       projectId: new FormControl({value:this.data.storage["projectId"],disabled:true},Validators.required),
       task: new FormControl(this.data.storage["task"],Validators.required),
       parentTaskCheck: new FormControl({value:false,disabled:true}),
-      priority: new FormControl(this.data.storage["priority"],Validators.required),
+      priority: new FormControl(this.data.storage["priority"]),
       startDate: new FormControl(this.data.storage["startDate"],Validators.required),
       endDate: new FormControl(this.data.storage["endDate"]),
       taskId: new FormControl(this.data.storage["taskId"]),
-      user: new FormControl(userId),
+      user: new FormControl({value:userId,disabled:true}),
       parentId: new FormControl(this.data.storage["parentId"])
     });
     this.isEdit = true;
    } else {
+    let today = new Date().toISOString().substring(0,10);
+    let tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate()+1);
     this.addTaskForm = new FormGroup({     
       projectId: new FormControl('',Validators.required),
       task: new FormControl('',Validators.required),
       parentTaskCheck: new FormControl(),
-      priority: new FormControl('',Validators.required),
+      priority: new FormControl(''),
       parentTask: new FormControl(''),
-      startDate: new FormControl('',Validators.required),
-      endDate: new FormControl(),
-      user: new FormControl('', Validators.required),
+      startDate: new FormControl(today,Validators.required),
+      endDate: new FormControl(tomorrow.toISOString().substring(0,10)),
+      user: new FormControl(''),
       parentId: new FormControl()
     });   
     this.isEdit = false;
@@ -86,14 +91,10 @@ export class AddTaskComponent implements OnInit {
     }
 
     onAdd(){
-      this.submitted=true;
       
        // stop here if form is invalid
-       if (this.addTaskForm.invalid) {
-        console.log("in if block:::");
-        return;
-       } else {   
-         console.log("in else block:::");
+       if (this.addTaskForm.valid) {
+             
           if(this.addTaskForm.controls["parentTaskCheck"].value==true){
             this.parent = new Parent();
             this.parent.parentTask = this.addTaskForm.controls["parentTask"].value;
@@ -108,18 +109,26 @@ export class AddTaskComponent implements OnInit {
                   let body = JSON.stringify(this.task);
                   console.log("body for update task::::"+body);
                   this.http.post("v1/update/taskmanager/"+this.data.storage["taskId"],body).subscribe
-                  (data=>console.log(data), err=> console.log(err));
+                  (data=>this.message="Successfully updated the task details",  err=> {console.log(err),this.message="An error occurred during Update Task"});
+                  this.isEdit= false;
+                  this.onReset();                  
                 } else {                       
                   let body = JSON.stringify(this.task);
                   console.log("body for add task:::"+body);
                   this.http.post("v1/add/taskmanager",body).subscribe
-                  (data=>console.log(data), err=> console.log(err));
+                  (data=>this.message="Successfully added the task details", err=> {console.log(err),this.message="An error occurred during Add Task"});
                 }
           }
-      } 
+          this.submitted = false;
+      } else {
+        this.submitted = true;
+      }
     }
 
     onReset(){
+      let today = new Date().toISOString().substring(0,10);
+      let tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate()+1);
       this.addTaskForm.get("task").enable();
       this.addTaskForm.get("priority").enable();
       this.addTaskForm.get("startDate").enable();
@@ -130,9 +139,10 @@ export class AddTaskComponent implements OnInit {
 
       this.addTaskForm.get("task").setValue("");
       this.addTaskForm.get("priority").setValue("");
-      this.addTaskForm.get("startDate").setValue("");
-      this.addTaskForm.get("endDate").setValue("");
+      this.addTaskForm.get("startDate").setValue(today);
+      this.addTaskForm.get("endDate").setValue(tomorrow.toISOString().substring(0,10));
       this.addTaskForm.get("projectId").setValue("");
+      this.addTaskForm.get("taskId").setValue("");
       if(this.addTaskForm.get("parentId")!=null && this.addTaskForm.get("parentId")!=undefined){
         this.addTaskForm.get("parentId").setValue("");
       }

@@ -1,6 +1,9 @@
 
 <form [formGroup]="addUserForm">  
-  <div align="left">
+  <div class="error-message">
+      {{message}}
+  </div>
+  <div align="left">    
     <table>
       <tr>
         <td>
@@ -56,7 +59,25 @@
         <hr width = "50%" align="left" noshade>
     </div>
     <div class="input-container">
-        <div><input type="text" [(ngModel)]="searchUser" id="searchUser" placeholder="Search by User"></div>
+      <table>
+        <tr>
+          <td>
+              <input type="text" [(ngModel)]="searchUser" id="searchUser" placeholder="Search by User">
+          </td>
+          <td>
+              Sort By:
+          </td>
+          <td>
+              <button type="submit" value="First Name" (click)="sortByFirstName()">First Name</button>
+          </td>
+          <td>
+              <button type="submit" value="Last Name" (click)="sortByLastName()">Last Name</button>
+          </td>
+          <td>
+              <button type="submit" value="Employee Id" (click)="sortByEmployeeId()">Employee Id</button>
+          </td>
+        </tr>
+      </table>       
     </div>
     <div>
         <hr width = "50%" align="left" noshade>

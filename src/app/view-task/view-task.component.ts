@@ -62,4 +62,33 @@ onEndTask(i){
   let url = "v1/update/taskmanager/"+this.tasklist[i].taskId+"/endTask";
   this.callPOSTRestWebService(url,body);
 }
+
+
+sortByStartDate(){
+  if(this.tasklist!=null && this.tasklist!=undefined){
+    this.tasklist.sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());    
+  }
+
+}
+
+sortByEndDate(){
+  if(this.tasklist!=null && this.tasklist!=undefined){
+    this.tasklist.sort((a, b) => new Date(a.endDate).getTime() - new Date(b.endDate).getTime());        
+  }
+
+}
+
+sortByPriority(){
+  if(this.tasklist!=null && this.tasklist!=undefined){
+      this.tasklist = this.tasklist.sort((t1:TaskManager,t2:TaskManager)=> {
+        if (t1.priority > t2.priority) {
+            return 1;
+        }
+        if (t1.priority < t2.priority) {
+            return -1;
+        }
+        return 0;
+    });
+  }
+}
 }

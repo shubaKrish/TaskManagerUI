@@ -23,7 +23,7 @@
                       <input type="checkbox" name="dates" formControlName="dates" (change)="enableDisableDates()"/> &nbsp;Set Start and End Date 
                   </td>           
                   <td>
-                    <input type="date" name="startDate" id="startDate" class="form-control" formControlName="startDate" [ngClass]="{ 'is-invalid': isSubmitInvalid && addProjectFormControls.startDate.errors }"/>
+                    <input type="date" name="startDate" id="startDate" class="form-control" formControlName="startDate" />
                   </td>           
                     <td>
                       <input type="date" name="endDate" id="endDate" class="form-control" formControlName="endDate" />
@@ -43,10 +43,8 @@
                   Priority:
                 </td>
                 <td>
-                  <input type="range" min="1" max="30" name="priority" id="priority" class="form-control" formControlName="priority" [ngClass]="{ 'is-invalid': isSubmitInvalid && addProjectFormControls.priority.errors }"/>
-                  <div *ngIf="isSubmitInvalid && addProjectFormControls.priority.errors" class="error-message">
-                    <div *ngIf="addProjectFormControls.priority.errors.required">Priority field is required</div>
-                </div>
+                  <input type="range" min="1" max="30" name="priority" id="priority" class="form-control" formControlName="priority" />
+                  
                 </td>
               </tr>
               <tr>
@@ -56,10 +54,7 @@
                 <td>
                   <select formControlName="manager" id="manager">
                         <option *ngFor="let user of users" [value]="user.userId">{{user.firstName}} , {{user.lastName}}</option>
-                  </select>
-                  <div *ngIf="isSubmitInvalid && addProjectFormControls.manager.errors" class="error-message">
-                      <div *ngIf="addProjectFormControls.manager.errors.required">Manager is required</div>
-                  </div>
+                  </select>                  
                 </td>
               </tr>     
                 
@@ -80,7 +75,30 @@
       <div class="input-container">
         <p>
         <span>
-          <input type="text" [(ngModel)]="searchProject" id="searchProject" placeholder="Search by Project">
+            <table>
+                <tr>
+                  <td>
+                      <input type="text" [(ngModel)]="searchProject" id="searchProject" placeholder="Search by Project">
+                  </td>
+                  </tr>
+                  <tr>
+                  <td>
+                      Sort By:
+                  </td>
+                  <td>
+                      <button type="submit" value="Start Date" (click)="sortByStartDate()">Start Date</button>
+                  </td>
+                  <td>
+                      <button type="submit" value="End Date" (click)="sortByEndDate()">End Date</button>
+                  </td>
+                  <td>
+                      <button type="submit" value="Priority" (click)="sortByPriority()">Priority</button>
+                  </td>
+                  <td>
+                      <button type="submit" value="Completed" (click)="sortByCompletedTask()">Completed</button>
+                  </td>
+                </tr>
+              </table>  
         </span> 
         </p>
         <p>
@@ -88,17 +106,17 @@
         <table width="80%">     
           <tbody *ngFor="let project of projects | projectFilter:searchProject ;let i = index;">
             <tr>
-              <td width="20%">
+              <td width="20%" >
                 <table>
                   <tr>
-                    <td> Project: {{project.project}}</td>
+                    <td>Project: {{project.project}}</td>
                   </tr>
                   <tr>
-                    <td> No. of Task: {{project.totalTask}} </td>
+                    <td>No. of Task: {{project.totalTask}} </td>
                     <td> &nbsp;Completed: {{project.completedTask}}</td>
                   </tr>
                   <tr>
-                      <td>Start Date: {{project.startDate}} </td>
+                      <td>Start Date:{{project.startDate}} </td>
                       <td> &nbsp;End Date: {{project.endDate}}</td>
                   </tr>
               </table>
@@ -106,7 +124,7 @@
               <td width="10%">
                   <table>
                       <tr>
-                        <td> Priority</td>
+                        <td>Priority</td>
                       </tr>
                       <tr>
                         <td> {{project.priority}} </td>
