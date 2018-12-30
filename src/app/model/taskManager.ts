@@ -12,4 +12,5 @@ export class TaskManager{
   public endDate: Date;
   public projectId: number;
   public user: User;
+  public status: String;
 }

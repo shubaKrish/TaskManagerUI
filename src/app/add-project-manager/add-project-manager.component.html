@@ -11,7 +11,7 @@
                 </td>
                 <td>
                   <div class="form-group">
-                  <input type="text" name="project" id="project" class="form-control" formControlName="project" [ngClass]="{ 'is-invalid': isSubmitInvalid && addProjectFormControls.project.errors }"/>
+                  <input type="text" name="project" id="project" class="form-control" required formControlName="project" [ngClass]="{ 'is-invalid': isSubmitInvalid && addProjectFormControls.project.errors }"/>
                   <div *ngIf="isSubmitInvalid && addProjectFormControls.project.errors" class="error-message">
                     <div *ngIf="addProjectFormControls.project.errors.required">Project is required</div>
                 </div>

@@ -58,6 +58,7 @@ callPOSTRestWebService(url,body){
 
 onEndTask(i){
   this.tasklist[i].endDate = new Date();
+  this.tasklist[i].status = 'Complete';
   let body = JSON.stringify(this.tasklist[i]);
   let url = "v1/update/taskmanager/"+this.tasklist[i].taskId+"/endTask";
   this.callPOSTRestWebService(url,body);
@@ -69,6 +70,21 @@ sortByStartDate(){
     this.tasklist.sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());    
   }
 
+}
+
+
+sortByCompleted(){
+  if(this.tasklist!=null && this.tasklist!=undefined){
+    this.tasklist = this.tasklist.sort((t1:TaskManager,t2:TaskManager)=> {
+      if (t1.status=="Complete" && t2.status!="Complete") {
+          return -1;
+      }
+      if (t1.status!="Complete" && t2.status=="Complete") {
+          return 1;
+      }
+      return 0;
+  });
+}
 }
 
 sortByEndDate(){
@@ -91,4 +107,6 @@ sortByPriority(){
     });
   }
 }
+
+
 }

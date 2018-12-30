@@ -13,7 +13,7 @@
           Project:
         </td>
         <td>
-            <select formControlName="projectId" id="projectId" [ngClass]="{ 'is-invalid': submitted && addFormControls.projectId.errors }">
+            <select formControlName="projectId" id="projectId" [ngClass]="{ 'is-invalid': submitted && addFormControls.projectId.errors }" required>
                 <option *ngFor="let project of projects" [value]="project.projectId">{{project.project}}</option>
             </select>  
             <div *ngIf="submitted && addFormControls.projectId.errors" class="error-message">
@@ -27,7 +27,7 @@
         </td>
         <td>
           <div class="form-group">
-          <input type="text" name="task" id="task" class="form-control" formControlName="task" [ngClass]="{ 'is-invalid': submitted && addFormControls.task.errors }"/>
+          <input type="text" name="task" id="task" class="form-control" formControlName="task" required [ngClass]="{ 'is-invalid': submitted && addFormControls.task.errors }"/>
           <div *ngIf="submitted && addFormControls.task.errors" class="error-message">
             <div *ngIf="addFormControls.task.errors.required">Task Description is required</div>
         </div>
@@ -66,7 +66,7 @@
           Start Date:
         </td>
         <td>
-          <input type="date" name="startDate" id="startDate" class="form-control" formControlName="startDate" [ngClass]="{ 'is-invalid': submitted && addFormControls.startDate.errors }"/>
+          <input type="date" name="startDate" id="startDate" class="form-control" required formControlName="startDate" [ngClass]="{ 'is-invalid': submitted && addFormControls.startDate.errors }"/>
           <div *ngIf="submitted && addFormControls.startDate.errors" class="error-message">
             <div *ngIf="addFormControls.startDate.errors.required">Start Date is required</div>
         </div>

@@ -11,7 +11,7 @@
         </td>
         <td>
           <div class="form-group">
-          <input type="text" name="firstName" id="firstName" class="form-control" formControlName="firstName" 
+          <input type="text" name="firstName" id="firstName" class="form-control" formControlName="firstName"  required 
           [ngClass]="{ 'is-invalid': submitted && addUserFormControls.firstName.errors }"/>
           <div *ngIf="submitted && addUserFormControls.firstName.errors" class="invalid-feedback">
             <div *ngIf="addUserFormControls.firstName.errors.required">First Name is required</div>
@@ -24,7 +24,7 @@
           <strong>Last Name:</strong>
         </td>
         <td>
-          <input type="text" name="lastName" id="lastName" class="form-control" formControlName="lastName" 
+          <input type="text" name="lastName" id="lastName" class="form-control" formControlName="lastName"  required
           [ngClass]="{ 'is-invalid': submitted && addUserFormControls.lastName.errors }"/>
           <div *ngIf="submitted && addUserFormControls.lastName.errors" class="invalid-feedback">
             <div *ngIf="addUserFormControls.lastName.errors.required">Last Name is required</div>
@@ -36,7 +36,7 @@
             <strong>Employee Id:</strong>
         </td>
         <td>
-            <input type="text" name="employeeId" id="employeeId" class="form-control" formControlName="employeeId" 
+            <input type="text" name="employeeId" id="employeeId" class="form-control" formControlName="employeeId" required
             [ngClass]="{ 'is-invalid': submitted && addUserFormControls.employeeId.errors }"/>
             <div *ngIf="submitted && addUserFormControls.employeeId.errors" class="invalid-feedback">
               <div *ngIf="addUserFormControls.employeeId.errors.required">Employee Id is required</div>
